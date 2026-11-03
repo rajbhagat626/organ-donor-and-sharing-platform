@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Search Matches{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>Find Compatible Donors</h1>
+        <p>Search our verified network for organ compatibility.</p>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom: 2rem;">
+    <form method="post" style="display: flex; gap: 1rem; align-items: flex-end;">
+        <div class="form-group" style="flex: 1; margin: 0;">
+            <label for="blood_type">Recipient Blood Type</label>
+            <select name="blood_type" id="blood_type">
+                <option value="">Any</option>
+                {% set bts = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] %}
+                {% for bt in bts %}
+                <option value="{{ bt }}" {% if request.form.get('blood_type')==bt %}selected{% endif %}>{{ bt }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group" style="flex: 1; margin: 0;">
+            <label for="organ_type">Required Organ</label>
+            <select name="organ_type" id="organ_type">
+                <option value="">Any</option>
+                {% set organs = ['Kidney', 'Liver', 'Heart', 'Lungs', 'Pancreas'] %}
+                {% for org in organs %}
+                <option value="{{ org }}" {% if request.form.get('organ_type')==org %}selected{% endif %}>{{ org }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="height: 46px;">Search Database</button>
+    </form>
+</div>
+
+{% if request.method == 'POST' %}
+<h2>Match Results</h2>
+
+{% if matches %}
+<div class="results-grid">
+    {% for match in matches %}
+    <div class="match-card">
+        <div class="match-header">
+            <span class="match-name">Donor #{{ match['id'] }}</span>
+            <span class="badge badge-blood">{{ match['blood_type'] }}</span>
+        </div>
+        <div class="match-details">
+            <div class="detail-row">
+                <div class="detail-label">Organ:</div>
+                <div>{{ match['organ_type'] }}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Joined:</div>
+                <div>{{ match['created_at'].split(' ')[0] }}</div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="no-results">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-light); margin-bottom: 1rem;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <h3>No matches found</h3>
+    <p>Try adjusting your search criteria. Blood type compatibility expansion is planned for future updates.</p>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}

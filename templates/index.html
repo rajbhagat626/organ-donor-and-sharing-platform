@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Give the Gift of <span>Life</span></h1>
+    <p>Connect with a network of life-savers. Whether you are willing to donate or are a hospital searching for a
+        critical match, our platform bridges the gap securely and efficiently.</p>
+
+    <div class="hero-actions">
+        {% if not g.user %}
+        <a href="{{ url_for('register') }}" class="btn btn-primary">Become a Donor Today</a>
+        <a href="{{ url_for('login') }}" class="btn btn-outline">Hospital Login</a>
+        {% else %}
+        {% if g.user['role'] == 'donor' %}
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+        {% else %}
+        <a href="{{ url_for('search') }}" class="btn btn-primary">Search for Matches</a>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>Donor Dashboard</h1>
+        <p>Manage your medical profile and donation preferences.</p>
+    </div>
+</div>
+
+<div class="grid-layout">
+    <div class="card">
+        <h2>Your Profile Setup</h2>
+        <form method="post">
+            <div class="form-group">
+                <label for="blood_type">Blood Type</label>
+                <select name="blood_type" id="blood_type" required>
+                    <option value="">Select...</option>
+                    {% set bts = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] %}
+                    {% for bt in bts %}
+                    <option value="{{ bt }}" {% if g.user['blood_type']==bt %}selected{% endif %}>{{ bt }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="organ_type">Organ Willing to Donate</label>
+                <select name="organ_type" id="organ_type" required>
+                    <option value="">Select...</option>
+                    {% set organs = ['Kidney', 'Liver', 'Heart', 'Lungs', 'Pancreas'] %}
+                    {% for org in organs %}
+                    <option value="{{ org }}" {% if g.user['organ_type']==org %}selected{% endif %}>{{ org }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="medical_history">Medical History</label>
+                <textarea name="medical_history" id="medical_history">{{ g.user['medical_history'] or '' }}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Profile</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Donation Status</h2>
+        <div style="text-align: center; padding: 2rem;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem;">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h3 style="margin-bottom: 0.5rem; color: var(--text-main);">Registered Donor</h3>
+            <p style="color: var(--text-light);">Your profile is active. Hospitals in our network can view your
+                compatibility data when searching for a match.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
